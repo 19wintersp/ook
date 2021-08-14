@@ -1,6 +1,8 @@
 use crate::error::Error;
 use crate::{ Token, TokenType };
 
+use std::io::{ self, Read };
+
 pub fn interpret(tokens: Vec<Token>, source: String) -> Result<(), Error> {
 	let len = tokens.len();
 
@@ -20,7 +22,7 @@ pub fn interpret(tokens: Vec<Token>, source: String) -> Result<(), Error> {
 			TokenType::Increment => mem[ptr] += 1,
 			TokenType::Decrement => mem[ptr] -= 1,
 			TokenType::Output => print!("{}", mem[ptr] as char),
-			TokenType::Input => unimplemented!(),
+			TokenType::Input => mem[ptr] = io::stdin().bytes().next().unwrap().unwrap(),
 			TokenType::LoopStart => {
 				if mem[ptr] == 0 {
 					let start = tokens[ip].pos;
